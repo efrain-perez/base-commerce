@@ -1,0 +1,16 @@
+# IDE / OS (root-level; backend/ and frontend/ carry their own tool-specific ignores)
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Frontend (added ahead of scaffolding so it's ready when /frontend lands)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# Env files that may hold local secrets/config
+.env
+.env.local
