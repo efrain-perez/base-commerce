@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/mydatabase}
-    username: ${SPRING_DATASOURCE_USERNAME:myuser}
-    password: ${SPRING_DATASOURCE_PASSWORD:secret}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gilacommerce}
+    username: ${SPRING_DATASOURCE_USERNAME:gila_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:gilacommerce_dev_pw}
