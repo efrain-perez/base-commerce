@@ -1,58 +1,53 @@
 import { useState } from 'react'
 import { TextInput } from '@/components/ui/TextInput'
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { ErrorBanner } from '@/components/ui/ErrorBanner'
-import { Pagination } from '@/components/ui/Pagination'
 import { ProductCard } from '@/components/product/ProductCard'
-import { useProductsQuery } from '@/hooks/useProducts'
+import { useInfiniteProductsQuery } from '@/hooks/useProducts'
 import { useDebouncedValue } from '@/lib/debounce'
 
 const PAGE_SIZE = 12
 
 export function ShopPage() {
   const [search, setSearch] = useState('')
-  const [page, setPage] = useState(0)
   const debouncedSearch = useDebouncedValue(search, 300)
 
-  const { data, isLoading, isError, refetch } = useProductsQuery({
+  const { data, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteProductsQuery({
     name: debouncedSearch || undefined,
-    page,
     size: PAGE_SIZE,
   })
+
+  const products = data?.pages.flatMap((page) => page.content) ?? []
 
   return (
     <div>
       <TextInput
         placeholder="Search products..."
         value={search}
-        onChange={(event) => {
-          setSearch(event.target.value)
-          setPage(0)
-        }}
+        onChange={(event) => setSearch(event.target.value)}
         className="max-w-sm"
       />
 
       <div className="mt-6">
         {isLoading && <Spinner />}
         {isError && <ErrorBanner message="Failed to load products." onRetry={refetch} />}
-        {data && data.content.length === 0 && (
+        {!isLoading && products.length === 0 && (
           <p className="py-8 text-center text-gray-500">No products found.</p>
         )}
-        {data && data.content.length > 0 && (
+        {products.length > 0 && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {data.content.map((product) => (
+            {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
-        {data && (
-          <Pagination
-            page={data.number}
-            totalPages={data.totalPages}
-            first={data.first}
-            last={data.last}
-            onPageChange={setPage}
-          />
+        {hasNextPage && (
+          <div className="flex justify-center py-6">
+            <Button variant="secondary" loading={isFetchingNextPage} onClick={() => fetchNextPage()}>
+              Load more
+            </Button>
+          </div>
         )}
       </div>
     </div>

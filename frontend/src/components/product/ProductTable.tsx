@@ -3,24 +3,49 @@ import { Table } from '@/components/ui/Table'
 import { Button } from '@/components/ui/Button'
 import { useDeleteProduct } from '@/hooks/useProductMutations'
 
+export interface SortState {
+  field: string
+  direction: 'asc' | 'desc'
+}
+
 interface ProductTableProps {
   products: ProductResponse[]
   onEdit: (product: ProductResponse) => void
+  sort: SortState | null
+  onSortChange: (field: string) => void
 }
 
-export function ProductTable({ products, onEdit }: ProductTableProps) {
+const SORTABLE_COLUMNS: { field: string; label: string }[] = [
+  { field: 'sku', label: 'SKU' },
+  { field: 'name', label: 'Name' },
+  { field: 'category', label: 'Category' },
+  { field: 'price', label: 'Price' },
+  { field: 'stock', label: 'Stock' },
+  { field: 'updatedAt', label: 'Updated' },
+]
+
+export function ProductTable({ products, onEdit, sort, onSortChange }: ProductTableProps) {
   const deleteProduct = useDeleteProduct()
 
   return (
     <Table>
       <Table.Head>
         <Table.Row>
-          <Table.HeaderCell>SKU</Table.HeaderCell>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Category</Table.HeaderCell>
-          <Table.HeaderCell>Price</Table.HeaderCell>
-          <Table.HeaderCell>Stock</Table.HeaderCell>
-          <Table.HeaderCell>Updated</Table.HeaderCell>
+          {SORTABLE_COLUMNS.map(({ field, label }) => {
+            const isActive = sort?.field === field
+            return (
+              <Table.HeaderCell key={field}>
+                <button
+                  type="button"
+                  onClick={() => onSortChange(field)}
+                  className="cursor-pointer select-none hover:text-gray-900"
+                >
+                  {label}
+                  {isActive && <span className="ml-1">{sort?.direction === 'asc' ? '▲' : '▼'}</span>}
+                </button>
+              </Table.HeaderCell>
+            )
+          })}
           <Table.HeaderCell />
         </Table.Row>
       </Table.Head>

@@ -1,10 +1,12 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { Spinner } from '@/components/ui/Spinner'
 import { Table } from '@/components/ui/Table'
 import { useOrderQuery } from '@/hooks/useOrder'
 
 export function OrderConfirmationPage() {
   const { orderId } = useParams<{ orderId: string }>()
+  const location = useLocation()
+  const justPlaced = Boolean((location.state as { justPlaced?: boolean } | null)?.justPlaced)
   const id = orderId ? Number(orderId) : undefined
   const { data: order, isLoading, isError } = useOrderQuery(id)
 
@@ -23,6 +25,12 @@ export function OrderConfirmationPage() {
 
   return (
     <div className="space-y-6">
+      {justPlaced && (
+        <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+          Thank you for your purchase! Your order has been placed.
+        </div>
+      )}
+
       <div>
         <h1 className="text-xl font-semibold text-gray-900">Order #{order.id}</h1>
         <p className="text-sm text-gray-500">

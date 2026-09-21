@@ -7,7 +7,7 @@ import type {
   ProductUpdateRequest,
 } from './types'
 
-export function listProducts(params: { name?: string; page: number; size: number }) {
+export function listProducts(params: { name?: string; page: number; size: number; sort?: string }) {
   return apiFetch<Page<ProductResponse>>('/products', { query: params })
 }
 

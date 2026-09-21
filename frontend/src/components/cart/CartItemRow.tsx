@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import type { CartItemResponse } from '@/api/types'
 import { Table } from '@/components/ui/Table'
 import { Button } from '@/components/ui/Button'
@@ -10,14 +10,16 @@ export function CartItemRow({ item }: { item: CartItemResponse }) {
   const updateCartItem = useUpdateCartItem()
   const removeCartItem = useRemoveCartItem()
 
-  const commitQuantity = () => {
-    if (quantity < 1) {
-      setQuantity(item.quantity)
-      return
+  const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const next = Number(event.target.value)
+    setQuantity(next)
+    if (next >= 1 && next !== item.quantity) {
+      updateCartItem.mutate({ productId: item.productId, quantity: next })
     }
-    if (quantity !== item.quantity) {
-      updateCartItem.mutate({ productId: item.productId, quantity })
-    }
+  }
+
+  const handleBlur = () => {
+    if (quantity < 1) setQuantity(item.quantity)
   }
 
   return (
@@ -27,11 +29,11 @@ export function CartItemRow({ item }: { item: CartItemResponse }) {
       <Table.Cell>${item.unitPrice.toFixed(2)}</Table.Cell>
       <Table.Cell>
         <NumberInput
-          className="w-20"
+          className="!w-16"
           min={1}
           value={quantity}
-          onChange={(event) => setQuantity(Number(event.target.value))}
-          onBlur={commitQuantity}
+          onChange={handleQuantityChange}
+          onBlur={handleBlur}
         />
       </Table.Cell>
       <Table.Cell>${item.lineTotal.toFixed(2)}</Table.Cell>

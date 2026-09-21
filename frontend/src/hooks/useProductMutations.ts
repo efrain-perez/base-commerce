@@ -38,8 +38,17 @@ export function useImportProducts() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (file: File) => importProducts(file),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['import-jobs'] })
+      const { successCount, failureCount } = data.job
+      if (failureCount === 0) {
+        toast.success(`Successfully imported ${successCount} product${successCount === 1 ? '' : 's'}.`)
+      } else {
+        toast(`Imported: ${successCount} succeeded, ${failureCount} failed. See Import History for details.`, {
+          icon: '⚠️',
+        })
+      }
     },
   })
 }
