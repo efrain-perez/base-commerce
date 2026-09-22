@@ -17,6 +17,7 @@ services:
 
   backend:
     image: ghcr.io/efrain-perez/base-commerce-backend:latest
+    build: ./backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gilacommerce
       SPRING_DATASOURCE_USERNAME: gila_app
@@ -27,6 +28,7 @@ services:
 
   frontend:
     image: ghcr.io/efrain-perez/base-commerce-frontend:latest
+    build: ./frontend
     depends_on:
       - backend
     ports:
