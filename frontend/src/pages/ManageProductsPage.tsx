@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
+import { TextInput } from '@/components/ui/TextInput'
 import { Spinner } from '@/components/ui/Spinner'
 import { ErrorBanner } from '@/components/ui/ErrorBanner'
 import { Pagination } from '@/components/ui/Pagination'
@@ -10,6 +11,7 @@ import { ProductTable, type SortState } from '@/components/product/ProductTable'
 import { ImportPanel } from '@/components/import/ImportPanel'
 import { ImportHistoryPanel } from '@/components/import/ImportHistoryPanel'
 import { useProductsQuery } from '@/hooks/useProducts'
+import { useDebouncedValue } from '@/lib/debounce'
 import type { ProductResponse } from '@/api/types'
 
 const DEFAULT_PAGE_SIZE = 10
@@ -25,16 +27,24 @@ type ModalState = { mode: 'create' } | { mode: 'edit'; product: ProductResponse 
 
 export function ManageProductsPage() {
   const [activeTab, setActiveTab] = useState<TabId>('products')
+  const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
   const [sort, setSort] = useState<SortState | null>(null)
   const [modal, setModal] = useState<ModalState>(null)
 
+  const debouncedSearch = useDebouncedValue(search, 300)
+
   const { data, isLoading, isError, refetch } = useProductsQuery({
+    name: debouncedSearch || undefined,
     page,
     size: pageSize,
     sort: sort ? `${sort.field},${sort.direction}` : undefined,
   })
+
+  useEffect(() => {
+    setPage(0)
+  }, [debouncedSearch])
 
   const handleSortChange = (field: string) => {
     setSort((current) =>
@@ -59,6 +69,12 @@ export function ManageProductsPage() {
 
       {activeTab === 'products' && (
         <>
+          <TextInput
+            placeholder="Search products..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            className="max-w-sm"
+          />
           <ImportPanel />
           {isLoading && <Spinner />}
           {isError && <ErrorBanner message="Failed to load products." onRetry={refetch} />}
