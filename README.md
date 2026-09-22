@@ -1,4 +1,4 @@
-# Gila Commerce — E-Commerce Code Challenge
+# E-Commerce Code Challenge
 
 Enterprise-grade e-commerce app: Product CRUD, CSV import, search, and purchase, built as a Spring Boot API + React SPA, run together via Docker Compose.
 
@@ -51,7 +51,7 @@ Serves the app on `http://localhost:5173`, proxying API calls to the backend on 
 ## Repository structure
 
 ```
-gila_software/
+base-commerce/
 ├── backend/    Spring Boot API (+ Dockerfile)
 ├── frontend/   React SPA, Vite + TypeScript (+ Dockerfile, nginx.conf)
 ├── docs/       Challenge CSV + DECISIONS.md (full design rationale)
