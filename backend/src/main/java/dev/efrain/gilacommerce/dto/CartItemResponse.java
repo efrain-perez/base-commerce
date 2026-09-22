@@ -11,7 +11,8 @@ public record CartItemResponse(
         String name,
         BigDecimal unitPrice,
         Integer quantity,
-        BigDecimal lineTotal) {
+        BigDecimal lineTotal,
+        Integer availableStock) {
 
     public static CartItemResponse from(CartItem item, Product product) {
         BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
@@ -21,6 +22,7 @@ public record CartItemResponse(
                 product.getName(),
                 product.getPrice(),
                 item.getQuantity(),
-                lineTotal);
+                lineTotal,
+                product.getStock());
     }
 }

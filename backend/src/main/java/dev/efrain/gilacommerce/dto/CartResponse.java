@@ -13,9 +13,12 @@ public record CartResponse(
         UUID id,
         String status,
         List<CartItemResponse> items,
-        BigDecimal subtotal) {
+        BigDecimal subtotal,
+        List<RemovedCartItemResponse> removedItems,
+        boolean hasStockIssues) {
 
-    public static CartResponse from(Cart cart, List<CartItem> items, Map<Long, Product> productsById) {
+    public static CartResponse from(Cart cart, List<CartItem> items, Map<Long, Product> productsById,
+            List<RemovedCartItemResponse> removedItems) {
         List<CartItemResponse> itemResponses = items.stream()
                 .filter(item -> productsById.containsKey(item.getProductId()))
                 .map(item -> CartItemResponse.from(item, productsById.get(item.getProductId())))
@@ -23,6 +26,8 @@ public record CartResponse(
         BigDecimal subtotal = itemResponses.stream()
                 .map(CartItemResponse::lineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return new CartResponse(cart.getId(), cart.getStatus().name(), itemResponses, subtotal);
+        boolean hasStockIssues = itemResponses.stream()
+                .anyMatch(item -> item.quantity() > item.availableStock());
+        return new CartResponse(cart.getId(), cart.getStatus().name(), itemResponses, subtotal, removedItems, hasStockIssues);
     }
 }

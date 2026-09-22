@@ -1,6 +1,7 @@
 package dev.efrain.gilacommerce.service;
 
 import dev.efrain.gilacommerce.dto.CartResponse;
+import dev.efrain.gilacommerce.dto.RemovedCartItemResponse;
 import dev.efrain.gilacommerce.entity.Cart;
 import dev.efrain.gilacommerce.entity.CartItem;
 import dev.efrain.gilacommerce.entity.CartStatus;
@@ -114,7 +115,36 @@ public class CartService {
         Map<Long, Product> productsById = productRepository.findAllById(
                 items.stream().map(CartItem::getProductId).toList()
         ).stream().collect(Collectors.toMap(Product::getId, product -> product));
-        return CartResponse.from(cart, items, productsById);
+
+        List<CartItem> deletedProductItems = items.stream()
+                .filter(item -> !productsById.containsKey(item.getProductId()))
+                .toList();
+        List<RemovedCartItemResponse> removedItems = buildRemovedItems(deletedProductItems);
+        if (!deletedProductItems.isEmpty()) {
+            cartItemRepository.deleteAll(deletedProductItems);
+        }
+
+        List<CartItem> remainingItems = items.stream()
+                .filter(item -> !deletedProductItems.contains(item))
+                .toList();
+
+        return CartResponse.from(cart, remainingItems, productsById, removedItems);
+    }
+
+    private List<RemovedCartItemResponse> buildRemovedItems(List<CartItem> deletedProductItems) {
+        if (deletedProductItems.isEmpty()) {
+            return List.of();
+        }
+        Map<Long, Product> deletedProducts = productRepository.findAllByIdIncludingDeleted(
+                deletedProductItems.stream().map(CartItem::getProductId).toList()
+        ).stream().collect(Collectors.toMap(Product::getId, product -> product));
+        return deletedProductItems.stream()
+                .map(item -> new RemovedCartItemResponse(
+                        item.getProductId(),
+                        deletedProducts.containsKey(item.getProductId())
+                                ? deletedProducts.get(item.getProductId()).getName()
+                                : "Unknown product"))
+                .toList();
     }
 
     private Optional<UUID> parseUuid(String raw) {

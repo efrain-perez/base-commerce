@@ -14,3 +14,7 @@ frontend/.env.local
 # Env files that may hold local secrets/config
 .env
 .env.local
+
+# Internal-only notes/artifacts (challenge PDF, archival planning notes, scratch
+# test files) — not part of the deliverable, kept locally for reference only
+docs/internal/

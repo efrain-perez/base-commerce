@@ -48,6 +48,12 @@ export interface CartItemResponse {
   unitPrice: number
   quantity: number
   lineTotal: number
+  availableStock: number
+}
+
+export interface RemovedCartItemResponse {
+  productId: number
+  name: string
 }
 
 export interface CartResponse {
@@ -55,6 +61,8 @@ export interface CartResponse {
   status: string
   items: CartItemResponse[]
   subtotal: number
+  removedItems: RemovedCartItemResponse[]
+  hasStockIssues: boolean
 }
 
 export interface OrderItemResponse {
