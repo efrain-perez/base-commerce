@@ -25,7 +25,7 @@ export function ImportPanel() {
         type="file"
         accept=".csv"
         onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-        className="text-sm"
+        className="text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-blue-700 hover:file:bg-blue-100"
       />
       <Button disabled={!file} loading={importProducts.isPending} onClick={onSubmit}>
         Import

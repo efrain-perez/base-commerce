@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useCartQuery } from '@/hooks/useCart'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -14,7 +14,9 @@ export function Layout() {
     <div className="min-h-screen bg-gray-50">
       <nav className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <span className="text-lg font-semibold text-gray-900">Gila Commerce</span>
+          <Link to="/" className="text-lg font-semibold text-gray-900 hover:text-gray-700">
+            Foobar Mart
+          </Link>
           <div className="flex items-center gap-2">
             <NavLink to="/" end className={navLinkClass}>
               Shop

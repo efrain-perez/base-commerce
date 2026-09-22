@@ -90,8 +90,7 @@ Deliberately out of scope for the deadline (time permitting), in priority order 
 
 1. Async CSV import (background job + polling, for supplier-sized files)
 2. Product images (not in the challenge's schema/CSV; needs a storage decision)
-3. Testcontainers instead of H2 for integration tests
-4. An "Orders" history page — needs a scope decision first (anonymous `localStorage` list vs. real accounts)
+3. User accounts (real login/registration) — enables durable per-shopper data like order history and saved shipping addresses, currently anonymous-cookie-only or entirely absent
 
 ## AI usage disclosure
 
