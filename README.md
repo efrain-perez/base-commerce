@@ -6,7 +6,7 @@ Enterprise-grade e-commerce app: Product CRUD, CSV import, search, and purchase,
 
 ## Status
 
-Work in progress. Started 2026-09-15, due 2026-09-23. Phase 0 (foundations), Phase 1 (Product CRUD, search, CSV import, audit trail), Phase 2 (cart, checkout), and Phase 3 (React frontend) complete. Phase 4 (Docker Compose wiring all three services) remains.
+Feature-complete. Started 2026-09-15, due 2026-09-23. All required phases are done: Phase 0 (foundations), Phase 1 (Product CRUD, search, CSV import, audit trail), Phase 2 (cart, checkout), Phase 3 (React frontend), and Phase 4 (Docker Compose wiring all three services, GHCR image publishing). Remaining time is going toward polish and hardening (see recent entries throughout this document) plus whatever's left in [Future improvements](#future-improvements-time-permitting), which are deliberately out of scope for the deadline rather than unfinished work.
 
 ## Tech stack
 
