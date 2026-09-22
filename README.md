@@ -16,7 +16,7 @@ docker compose up
 ```
 From the repo root. Pulls prebuilt images from GHCR and starts all three services — visit `http://localhost:8080`. Wiring details: [`docs/DECISIONS.md`](docs/DECISIONS.md#deployment-docker-compose).
 
-**One-time prerequisite**: the images must be published before this works — push to `main`, let `.github/workflows/publish-images.yml` run, then set both GHCR packages to public visibility in GitHub's package settings ([why](docs/DECISIONS.md#image-hosting-github-container-registry-ghcr--github-actions)). Without that, `docker compose up` will fail to pull.
+Images are already published and public on GHCR via `.github/workflows/publish-images.yml`, which rebuilds and republishes them on every push to `main` — no setup needed before running the command above ([why GHCR, and the one manual visibility step behind it](docs/DECISIONS.md#image-hosting-github-container-registry-ghcr--github-actions)).
 
 **No network access to GHCR, or don't want to depend on it?**
 ```
