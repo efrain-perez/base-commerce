@@ -209,6 +209,8 @@ Phase 4, confirmed 2026-09-18. Three services — `postgres`, `backend`, `fronte
 
 Verified end-to-end against locally-built images (tagged to match the GHCR names so Compose used the local cache instead of trying to pull) before the GHCR workflow had ever run: all three containers start, Flyway migrates against the containerized Postgres, and the full create/search/cart/checkout flow works through nginx's reverse proxy exactly as it did through Vite's dev proxy in Phase 3 — including the `HttpOnly` cart cookie surviving the proxy hop intact.
 
+**Independently re-verified on a second machine.** Confirmed 2026-09-22. A fresh `git clone` on different hardware (not the original dev machine) brought the full stack up cleanly with a single `docker compose up` and no manual fixes needed — the strongest evidence so far that "one command, no setup" actually holds for a reviewer, rather than only working on the machine it was built on.
+
 ### Image hosting: GitHub Container Registry (GHCR) + GitHub Actions
 Confirmed 2026-09-16, wired up in Phase 4. Rather than requiring a reviewer to build both images locally, `.github/workflows/publish-images.yml` builds and pushes `ghcr.io/efrain-perez/base-commerce-backend:latest` and `ghcr.io/efrain-perez/base-commerce-frontend:latest` on every push to `main`. The root `docker-compose.yml` references those tags directly, so a default `docker compose up` only pulls — no local JDK/Node toolchain needed, just Docker itself.
 
